@@ -1,4 +1,4 @@
-CU_APPS = hello_world arrays_sum_1D
+CU_APPS = hello_world arrays_sum_1D vectorAdd
 
 all: ${C_APPS} ${CU_APPS}
 

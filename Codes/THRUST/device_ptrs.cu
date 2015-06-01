@@ -23,7 +23,7 @@ int main(int argc, char **argv){
     
     // Use a thrust algorithm on the vectors
     float sum = thrust::reduce(v4.begin(), v4.end());
-    printf("Sum %g\n", sum);
+    printf("Sum v4 %g\n", sum);
     
     // You can use a thrust::device_ptr in algorithms
     thrust::device_ptr<float> v4_dptr = v4.data();
@@ -34,7 +34,7 @@ int main(int argc, char **argv){
     float *raw_ptr = thrust::raw_pointer_cast(v4_dptr);
     // ... or this way
     float *raw_ptr2 = v4_dptr.get();
-	print_dev<<<1,1>>>(raw_ptr2, 100);
+//	print_dev<<<1,1>>>(raw_ptr2, 100);
     
     // You can convert raw pointers to device_ptr to use in algorithms
     thrust::device_ptr<float> v5_dptr(raw_ptr);

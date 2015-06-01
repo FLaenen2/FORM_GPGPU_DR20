@@ -3,6 +3,13 @@
 #include "../COMMON/commons.cuh"
 #include <stdio.h>
 
+struct Sq{
+    
+    __device__ __host__ float operator()(const float& a){
+	return a*a;
+    }
+
+};
 
 int main(int argc, char **argv){
 
@@ -16,7 +23,8 @@ int main(int argc, char **argv){
     // Use a in-place unary transformation algorithm already defined in thrust
     // Syntax is transform( beginning_of_object_to_transform, beginning_of_object_to_transform,
     // beginning_of_where_to_put_the_result, operation_to_use )
-    thrust::transform(v1.begin(), v1.end(), v1.begin(), thrust::negate<float>());
+    //thrust::transform(v1.begin(), v1.end(), v1.begin(), thrust::negate<float>());
+    thrust::transform(v1.begin(), v1.end(), v1.begin(), Sq());
     printf("Sequence transformed\n");
     
     // Print the result

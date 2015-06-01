@@ -23,7 +23,7 @@ int main(int argc, char **argv){
     float reduced = thrust::reduce(v1.begin(), v1.end(),  0, thrust::plus<float>());
 
     // Print the result
-    printf("Values : from inner product %g, form reduction %g\n", result, reduced);    
+    printf("Values : from inner product %g, form reduction %g\nSize of vector %d\n", result, reduced, v1.size());    
 
     return 0;
 

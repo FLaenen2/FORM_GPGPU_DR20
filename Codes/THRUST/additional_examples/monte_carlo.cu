@@ -63,7 +63,7 @@ struct estimate_pi : public thrust::unary_function<unsigned int,float>
 int main(void)
 {
   // use 30K independent seeds
-  int M = 30000;
+  int M = 300000;
 
   float estimate = thrust::transform_reduce(thrust::counting_iterator<int>(0),
                                             thrust::counting_iterator<int>(M),
@@ -72,7 +72,7 @@ int main(void)
                                             thrust::plus<float>());
   estimate /= M;
 
-  std::cout << std::setprecision(3);
+  std::cout << std::setprecision(15);
   std::cout << "pi is approximately " << estimate << std::endl;
 
   return 0;

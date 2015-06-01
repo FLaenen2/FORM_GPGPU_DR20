@@ -9,7 +9,12 @@
 
 #define CUFFT_CHECK( err )    __cufftSafeCall( err, __FILE__, __LINE__ )
 #define CUBLAS_CHECK(err)  __cublasSafeCall( err, __FILE__, __LINE__ )
+//#ifndef NDEBUG
 #define CUDA_CHECK( err ) __cudaSafeCall( err, __FILE__, __LINE__ )
+//#elseif
+//#define CUDA_CHECK(err) err;
+//#endif
+ 
 #define CURAND_CHECK(x) do { if((x)!=CURAND_STATUS_SUCCESS) { \
 printf("Error at %s:%d\n",__FILE__,__LINE__);\
 return EXIT_FAILURE;}} while(0)
