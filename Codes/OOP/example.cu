@@ -16,7 +16,7 @@ class GpuClass{
 	
 		// Methods
 	//	__global__ void sayHello(void){ printf("hello from global function from class !\n");} // this is forbidden
-		__device__  int printNumb(int i){return arr[i];}
+		__device__ __host__  int printNumb(int i){return arr[i];}
 		
 };
 
