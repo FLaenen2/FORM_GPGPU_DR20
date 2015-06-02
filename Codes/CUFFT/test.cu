@@ -5,10 +5,11 @@ using namespace std;
 int main(int argc, char **argv){
 
     thrust::device_vector<float> v(10, 2);
-    ofstream outFile;
-    outFile.open("./output", ios::out);
-    thrust::copy(v.begin(), v.end(), std::ostream_iterator<float>(outFile, " "));
+    ifstream inFile;
+    inFile.open("./outputHeat", ios::in);
+    istream_iterator<float> intvecRead ( inFile );
+    thrust::copy(intvecRead, std::istream_iterator<float>(), std::ostream_iterator<float>(std::cout, " "));
     CUDA_CHECK(cudaDeviceSynchronize());
-    outFile.close();
+    inFile.close();
 return 0;
 }

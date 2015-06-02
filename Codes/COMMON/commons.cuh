@@ -108,6 +108,14 @@ struct GpuTimer
 };
 
 
+inline void assertAvailableMemory(void){
+    // Stat the state of graphical memory
+    size_t free, total;
+    CUDA_CHECK(cudaMemGetInfo(&free, &total));
+    //CUDA_CHECK(cudaDeviceSynchronize());
+    fprintf(stdout,"\n\tAvailable VRAM : %g Mo/ %g Mo(total)\n\n", free / 1e6, total / 1e6);
+
+}
 
 template<typename T>
 __global__ void print_dev(T *x, int size){

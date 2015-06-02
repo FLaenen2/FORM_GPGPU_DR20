@@ -38,7 +38,6 @@ template<typename C>
     }
 
 
-
 #define TPB 512
 
 __global__ void update(cufftComplex *vec, const float nu, const float dt, const int nk){
@@ -46,10 +45,14 @@ __global__ void update(cufftComplex *vec, const float nu, const float dt, const 
     if (i < nk){
 	int kx = i;
 	float kk = kx * kx;	
-	vec[i].x -= dt * nu * kk * vec[i].x;
-	vec[i].y -= dt * nu * kk * vec[i].y;
-	//vec[i].x *= (1 - nu * dt * kk ) * vec[i].x;
-	//vec[i].y *= (1 - nu * dt * kk ) * vec[i].y;
+	//vec[i].x -= dt * nu * kk * vec[i].x; // explicit, Euler
+	//vec[i].y -= dt * nu * kk * vec[i].y;
+	float tempr = vec[i].x - vec[i].x * kk * nu * dt/2; // Runge-Kutta 2
+	float tempy = vec[i].y - vec[i].y * kk * nu * dt/2;
+	vec[i].x = vec[i].x - dt * nu * kk * tempr;
+	vec[i].y = vec[i].y - dt * nu * kk * tempy;
+	//vec[i].x /= (1 + nu * dt * kk); // implicit version
+	//vec[i].y /= (1 + nu * dt * kk);
     }
 
 }
@@ -74,16 +77,16 @@ int main(int argc, char **argv){
     
     // Parameters
     float nu = .005;
-    float T  = 1;
+    float T  = 50.;
     float dt = 0.001;
     int NT = round(T / dt);
     float dx = L / nx;
-    float mean = 0;
+    float mean = 0.;
     float sigma = 0.5;
     // Generate a signal on the host
     for (int i = 0; i < nx; i++){
 	    float xi = -M_PI + i * dx;
-	    h_v[i] = exp(-(xi-mean)*(xi-mean)/(2.*sigma*sigma)); 
+	    h_v[i] = 1. /sqrt(2.* M_PI * sigma) * exp(-(xi-mean)*(xi-mean)/(2.*sigma*sigma)); 
      }
     
 
@@ -98,7 +101,7 @@ int main(int argc, char **argv){
     CUFFT_CHECK(cufftPlan1d(&planr2c, nx, CUFFT_R2C, 1));
     CUFFT_CHECK(cufftPlan1d(&planc2r, nx, CUFFT_C2R, 1));
 
-		// for no padding : useless in 1D
+		// for no padding  
     CUFFT_CHECK(cufftSetCompatibilityMode(planr2c, CUFFT_COMPATIBILITY_NATIVE));
     CUFFT_CHECK(cufftSetCompatibilityMode(planc2r, CUFFT_COMPATIBILITY_NATIVE));
 
@@ -119,10 +122,10 @@ int main(int argc, char **argv){
 	
 	update<<<grid, TPB>>>(d_v, nu, dt, nk);     
 	CUDA_CHECK_ERROR();
-	//CUDA_CHECK(cudaDeviceSynchronize());
+	CUDA_CHECK(cudaDeviceSynchronize());
 	
 	// INVERSE TRANSFORM
-	    if (!(it % 10)){
+	    if (!(it % 500)){
 		CUFFT_CHECK(cufftExecC2R(planc2r, d_v, (cufftReal *)d_v));
 		CUDA_CHECK(cudaDeviceSynchronize());
 		outFile.open("./outputHeat", ios::app);
@@ -140,7 +143,8 @@ int main(int argc, char **argv){
     // Release plans
     CUFFT_CHECK(cufftDestroy(planr2c));
     CUFFT_CHECK(cufftDestroy(planc2r));
-	
+    CUDA_CHECK(cudaDeviceReset());
+    SYNCGPU();	
     return 0;
     
 }
