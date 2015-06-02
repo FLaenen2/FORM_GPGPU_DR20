@@ -41,8 +41,8 @@ h_sum = gather(d_sum);
 
 % Available functions : arrayfun, bsxfun... see help
 
-
-% Use of custom kernel : example with add.cu. Compile with nvcc -ptx add.cu
+% Use of custom kernel : example with add.cu. Compile with 
+!/usr/local/cuda/bin/nvcc -ptx add.cu
 % -> add.ptx
 % Create a CUDAkernel object with the following :
 kern = parallel.gpu.CUDAKernel('add.ptx','add.cu');

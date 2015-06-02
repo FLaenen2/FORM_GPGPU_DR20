@@ -1,4 +1,4 @@
-CU_APPS = gemv
+CU_APPS = gemv inversion
 C_APPS = simpleCUBLAS batchCUBLAS
 DEBUG = -g -G
 all: ${C_APPS} ${CU_APPS}

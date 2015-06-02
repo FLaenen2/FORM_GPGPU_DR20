@@ -13,7 +13,7 @@
 int main(int argc, char **argv)
 {
     cublasHandle_t handle;
-    cublasStatus_t status;
+    //cublasStatus_t status;
     float *d_x, *d_A, *d_y;
     
     // Make place on CPU memory for matrix and vector. 
@@ -22,16 +22,16 @@ int main(int argc, char **argv)
     float *h_A = new float[M*N];
 
     // Initialize cublas to perform operations
+    //CHECK_CUBLAS(cublasCreate_v2(&handle));
+
     CHECK_CUBLAS(cublasCreate_v2(&handle));
 
-    status = cublasCreate(&handle);
-
     // The long way to check for error
-	if (status != CUBLAS_STATUS_SUCCESS)
+/*	if (status != CUBLAS_STATUS_SUCCESS)
     {
         fprintf(stderr, "!!!! CUBLAS initialization error\n");
         return EXIT_FAILURE;
-    }
+    }*/
 
     // Create vector and matrix on host side
 	for (int j = 0; j < N; j++){
@@ -43,7 +43,7 @@ int main(int argc, char **argv)
 
     // Allocate memory on device for the vector and the matrix
     //CHECK(cudaMalloc(&d_x, N * sizeof(float)));
-    CHECK(cudaMalloc(&d_x, N *1000000* sizeof(float)));
+    CHECK(cudaMalloc(&d_x, N * sizeof(float)));
     CHECK(cudaMalloc(&d_y, M * sizeof(float)));
     CHECK(cudaMemset(d_y, 0, M * sizeof(float)));
     CHECK(cudaMalloc(&d_A, M * N * sizeof(float)));
@@ -63,7 +63,7 @@ int main(int argc, char **argv)
     CHECK_CUBLAS(cublasSgemv(handle, CUBLAS_OP_N, M, N, &alpha, d_A, M, d_x, 1, &beta, d_y, 1));
 
 	// Get the resulting vector
-    CHECK_CUBLAS(cublasGetVector(M, sizeof(h_A[0]), d_y, 1, h_y, 1));
+    CHECK_CUBLAS(cublasGetVector(M, sizeof(h_y[0]), d_y, 1, h_y, 1));
 
     for (int i = 0; i < M; i+=max(1,N/100)){
     	printf("[%d] %g\n", i, h_y[i]);

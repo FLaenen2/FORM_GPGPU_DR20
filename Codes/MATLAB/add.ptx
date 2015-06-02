@@ -4,7 +4,7 @@
 	// nvopencc 4.1 built on 2014-04-01
 
 	//-----------------------------------------------------------
-	// Compiling /var/folders/qw/q788gmz51jqbnf7988dlrq1m0000gp/T//tmpxft_000070dc_00000000-9_add.cpp3.i (/var/folders/qw/q788gmz51jqbnf7988dlrq1m0000gp/T/ccBI#.JiOtGx)
+	// Compiling /var/folders/qw/q788gmz51jqbnf7988dlrq1m0000gp/T//tmpxft_00004c02_00000000-9_add.cpp3.i (/var/folders/qw/q788gmz51jqbnf7988dlrq1m0000gp/T/ccBI#.IDxOh3)
 	//-----------------------------------------------------------
 
 	//-----------------------------------------------------------
@@ -16,7 +16,7 @@
 	//  -m2	(Report advisories)
 	//-----------------------------------------------------------
 
-	.file	1	"/var/folders/qw/q788gmz51jqbnf7988dlrq1m0000gp/T//tmpxft_000070dc_00000000-8_add.cudafe2.gpu"
+	.file	1	"/var/folders/qw/q788gmz51jqbnf7988dlrq1m0000gp/T//tmpxft_00004c02_00000000-8_add.cudafe2.gpu"
 	.file	2	"/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/clang/6.0/include/stddef.h"
 	.file	3	"/usr/local/cuda/bin/../include/crt/device_runtime.h"
 	.file	4	"/usr/local/cuda/bin/../include/host_defines.h"
@@ -60,7 +60,7 @@
 	.reg .u32 %r<6>;
 	.reg .u64 %rd<8>;
 	.reg .f32 %f<3>;
-	.reg .f64 %fd<8>;
+	.reg .f64 %fd<6>;
 	.reg .pred %p<3>;
 	.loc	13	1	0
 $LDWbegin__Z3addPdS_fi:
@@ -78,15 +78,13 @@ $LDWbegin__Z3addPdS_fi:
 	ld.param.u64 	%rd3, [__cudaparm__Z3addPdS_fi_a];
 	add.u64 	%rd4, %rd3, %rd2;
 	ld.global.f64 	%fd1, [%rd4+0];
-	cvt.rn.f64.s32 	%fd2, %r3;
 	ld.param.f32 	%f1, [__cudaparm__Z3addPdS_fi_c];
-	cvt.f64.f32 	%fd3, %f1;
+	cvt.f64.f32 	%fd2, %f1;
 	ld.param.u64 	%rd5, [__cudaparm__Z3addPdS_fi_b];
 	add.u64 	%rd6, %rd5, %rd2;
-	ld.global.f64 	%fd4, [%rd6+0];
-	mul.f64 	%fd5, %fd3, %fd4;
-	mad.rn.f64 	%fd6, %fd2, %fd5, %fd1;
-	st.global.f64 	[%rd4+0], %fd6;
+	ld.global.f64 	%fd3, [%rd6+0];
+	mad.rn.f64 	%fd4, %fd2, %fd3, %fd1;
+	st.global.f64 	[%rd4+0], %fd4;
 $Lt_0_1026:
 	.loc	13	8	0
 	exit;
