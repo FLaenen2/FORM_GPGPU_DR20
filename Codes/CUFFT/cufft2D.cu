@@ -4,7 +4,6 @@
 #include "../COMMON/commons.cuh"
 
 
-
  template<class C>
     __global__ void compLap(const C *src, C *dst, const int nx, const int ny, const float dkx = 1, const float dky = 1){
     
@@ -16,8 +15,8 @@
             float kx = i*dkx;
             float ky = j*dky;
             float kk = (float)(kx*kx + ky*ky);
-            dst[gidx].x = kk * src[gidx].x;
-            dst[gidx].y = kk * src[gidx].y;
+            dst[gidx].x = -kk * src[gidx].x;
+            dst[gidx].y = -kk * src[gidx].y;
         }    
     }
     
@@ -109,7 +108,11 @@ int main(int argc, char **argv){
     scale_cmp<<<grid, TPB>>>(d_v, 1./(nx*ny), nk);
     CUDA_CHECK_ERROR();
     CUDA_CHECK(cudaDeviceSynchronize());
-    //compLap<<<grid, TPB>>>(d_v, d_v, nx, ny);
+    int tpbx = 16;
+    int tpby = 16;
+    dim3 block2D(tpbx, tpby);
+    dim3 grid2D(ceil((float)nx/2+1/tpbx), ceil((float)ny/tpby));
+    compLap<<<grid2D, block2D>>>(d_v, d_v, nx, ny);
     CUDA_CHECK_ERROR();
     CUDA_CHECK(cudaDeviceSynchronize());
     

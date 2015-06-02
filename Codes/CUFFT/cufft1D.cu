@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <cufft.h>
 #include "../COMMON/commons.cuh"
-
+#include <cuComplex.h>
 
 template<class C>
 __global__ void scale_cmp(C *arr, const float scale, const int size){
@@ -31,7 +31,8 @@ template<typename C>
     __global__ void print_cmp(C *val, int size = 1){
 
         for (int i = 0; i < size; i++){
-            printf("[%d] %g\t", i, val[i].x * val[i].x + val[i].y * val[i].y);
+            //printf("[%d] %g\t", i, val[i].x * val[i].x + val[i].y * val[i].y);
+            printf("[%d] %g\t", i, cuCabsf(val[i]) * cuCabsf(val[i]));
         }
         printf("\n");
 
@@ -52,7 +53,7 @@ int main(int argc, char **argv){
     int f2 = 10;
     int nk = nx/2 + 1;
     float L = 2. * M_PI;
-    float *h_v = new float[nx];
+    float *h_v = new float[nx]();
     cufftComplex *d_v;
 
     size_t spatSize = nx * sizeof(float);     // Shortcut for memory copies and allocations
@@ -70,7 +71,6 @@ int main(int argc, char **argv){
     CUDA_CHECK(cudaMemcpy((cufftReal *)d_v, h_v, spatSize, H2D));
     cout << endl << "Before : " << endl;
     printme<<<1,1>>>((cufftReal *) d_v, nx);
-
     CUDA_CHECK_ERROR();
     CUDA_CHECK(cudaDeviceSynchronize());
     
@@ -80,18 +80,18 @@ int main(int argc, char **argv){
     CUFFT_CHECK(cufftPlan1d(&planr2c, nx, CUFFT_R2C, 1));
     CUFFT_CHECK(cufftPlan1d(&planc2r, nx, CUFFT_C2R, 1));
 
-		// for no padding : useless in 1D
-    //CUFFT_CHECK(cufftSetCompatibilityMode(planr2c, CUFFT_COMPATIBILITY_NATIVE));
-    //CUFFT_CHECK(cufftSetCompatibilityMode(planc2r, CUFFT_COMPATIBILITY_NATIVE));
+		// for no padding
+    CUFFT_CHECK(cufftSetCompatibilityMode(planr2c, CUFFT_COMPATIBILITY_NATIVE));
+    CUFFT_CHECK(cufftSetCompatibilityMode(planc2r, CUFFT_COMPATIBILITY_NATIVE));
 
-    int grid (ceil((float)nk / TPB));
 
 	// Illustrates the use of timer
     GpuTimer myT(1);
-    myT.Start();
 
+    myT.Start();
     // DIRECT TRANSFORM, inplace
-    CUFFT_CHECK(cufftExecR2C(planr2c, (cufftReal *)d_v,  d_v));
+    CUFFT_CHECK(cufftExecR2C(planr2c, (cufftReal *) d_v,  d_v));
+    int grid (ceil((float)nk / TPB));
     scale_cmp<<<grid, TPB>>>(d_v, 1./nx, nk);
     CUDA_CHECK_ERROR();
     cout << endl << "Power spectrum : " << endl;
