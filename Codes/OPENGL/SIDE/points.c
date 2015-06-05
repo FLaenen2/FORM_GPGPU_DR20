@@ -11,7 +11,6 @@ int n = N;
 int main(int argc, char** argv){
 
     srand(time(NULL));
-    glutInit(&argc, argv);
     x = malloc(N*sizeof(float));
     y = malloc(N*sizeof(float));
     for (int it = 0; it < 100; it++){
@@ -22,7 +21,7 @@ int main(int argc, char** argv){
 	}
 	if (!(it % 10)){
 	    printf("displaying points it %d\n", it);
-	    drawPoints(it);
+	    drawPoints(argc, argv, it);
 	    sleep(2);
 	}
     }
