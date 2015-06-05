@@ -48,6 +48,7 @@ void drawPoints(float *x, float *y, int n){
     glutCreateWindow("Test points array");
     glutDisplayFunc(display);
     glutKeyboardFunc(displace);
+	glutSpecialFunc(displace);
     printf("keyboard func set\n");
     //glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_CONTINUE_EXECUTION);
    // glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_CONTINUE_EXECUTION);    
