@@ -11,11 +11,11 @@ float *x, *y;
 void
 reshape(int w, int h)
 {
-  glViewport(0, 0, w, h);
-  glMatrixMode(GL_PROJECTION);
-  glLoadIdentity();
-  gluOrtho2D(0, w, h, 0);
-  glMatrixMode(GL_MODELVIEW);
+ // glViewport(0, 0, w, h);
+  //glMatrixMode(GL_PROJECTION);
+  //glLoadIdentity();
+  //gluOrtho2D(0, w, h, 0);
+  //glMatrixMode(GL_MODELVIEW);
 }
 
 void
@@ -53,7 +53,7 @@ void gldrawLines(){
 	glVertex2f((GLfloat) x[i], (GLfloat) y[i]);
     }
     glEnd();
-    glColor4f(1.0f, 1.0f, 0.0f, 1.0f); // 
+    //glColor4f(1.0f, 1.0f, 0.0f, 1.0f); // 
   //  glBegin(GL_LINES);
 //	glVertex2f(-1+eps, -1+eps);
 //	glVertex2f(-1+eps, 1-eps);
@@ -83,22 +83,22 @@ void drawBorders(int w, int h){
 
 void display(){
 
-    glColor3f(1.0f, 0.0f, 1.0f); // blue color
+    glColor3f(1.0f, 0.0f, 0.0f); 
     //glTranslatef(0., 0., 0.0);
     //glRotatef(43, 0, 0, 2);
-    glPointSize(10.0f);
+    glPointSize(5.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     //glViewport(0, 0, 10, 10);
-    int w = glutGet(GLUT_WINDOW_WIDTH);
-    int h = glutGet(GLUT_WINDOW_HEIGHT);
-    glViewport(0, 0, w, h);
-glMatrixMode(GL_PROJECTION);
-glLoadIdentity();
-    gluOrtho2D(-1, 4, -1, 4);
-//glLoadIdentity();
-    gluOrtho2D(-1, 4, -1, 4);
-   gldrawLines();
-    drawBorders(w, h);
+    //int w = glutGet(GLUT_WINDOW_WIDTH);
+    //int h = glutGet(GLUT_WINDOW_HEIGHT);
+    //glViewport(0, 0, w, h);
+    //glMatrixMode(GL_PROJECTION);
+    //glLoadIdentity();
+    //gluOrtho2D(-1, 4, -1, 4);
+    //glLoadIdentity();
+    //gluOrtho2D(-1, 4, -1, 4);
+    gldrawLines();
+    //drawBorders(w, h);
     //glViewport(0, 0, glutGet(GLUT_WINDOW_WIDTH)/2, glutGet(GLUT_WINDOW_HEIGHT)/2);
     //output(-1, 0, "TEST");
     glutSwapBuffers();
@@ -126,7 +126,7 @@ void drawLines(float *x, float *y, int n){
     glutInitWindowSize(500, 500);
     glutInitWindowPosition(0, 0);
     glutReshapeFunc(reshape);
-    glClearColor(1.0, 1.0, 0, 1.0);
+    glClearColor(0.0, 0.0, 0, 1.0);
     glutCreateWindow("Test points array");
 
     glutDisplayFunc(display);

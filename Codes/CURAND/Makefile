@@ -1,4 +1,4 @@
-CU_APPS = rand_kernel poisson
+CU_APPS = rand_kernel poisson atomic
 
 all: ${C_APPS} ${CU_APPS}
 

@@ -4,6 +4,7 @@
 extern int n;
 extern float *x, *y;
 GLint win;
+static int set;
 void gldrawPoints(){
 
     glBegin(GL_POINTS);
@@ -30,7 +31,7 @@ output(int x, int y, char *string)
 
 void display(){
 
-    glColor3f(1.0f, 0.0f, 0.0f); //blue color
+    glColor3f(1.0f, 0.0f, 0.0f); 
     glPointSize(6.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     gldrawPoints();
@@ -49,20 +50,21 @@ void displace(unsigned char key, int xp, int yp){
 }
 
 
-void drawPoints(int it){
+void drawPoints(int argc, char **argv, int it){
+    set = 0;
+    if (!set){
+	glutInit(&argc, argv);
+    }
+	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
+	glutDisplayFunc(display);
     printf("n %d\n", n);
-    int argc = 0;
-    char **argv = NULL;
-    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
     char str[50];
     sprintf(str, "Points it %d", it);
-    win = glutCreateWindow(str);
-    glutDisplayFunc(display);
     glEnable(GL_POINT_SMOOTH);
+    win = glutCreateWindow(str);
     //glutKeyboardFunc(displace);
     //printf("keyboard func set, press any key to leave\n");
     glutMainLoopEvent();
     glutDestroyWindow(win);
-
 
 }

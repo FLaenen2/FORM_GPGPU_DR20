@@ -9,8 +9,15 @@ float *x, *y;
 void gldrawPoints(){
 
    // glScalef(3., 3., 1.);
+    glColor3f(0.0f, 0.0f, 1.0f); //blue color
     glBegin(GL_POINTS);
-    for (int i = 0; i < N; i++){
+    for (int i = 0; i < N/2; i++){
+	glVertex2f((GLfloat) x[i], (GLfloat) y[i]);
+    }
+    glEnd();
+    glColor3f(1.0f, 0.0f, 0.0f); //blue color
+    glBegin(GL_POINTS);
+    for (int i = N/2; i < N; i++){
 	glVertex2f((GLfloat) x[i], (GLfloat) y[i]);
     }
     glEnd();
@@ -36,12 +43,11 @@ output(int x, int y, char *str1)
 
 void display(){
 
-    glColor3f(0.0f,0.0f,1.0f); //blue color
     glPointSize(10.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  gldrawPoints();
+    gldrawPoints();
     //output(2, 2, "Hello");
-  glutSwapBuffers();
+    glutSwapBuffers();
 
 }
 
@@ -57,7 +63,7 @@ reshape(int w, int h)
 
 void drawPoints(float *x, float *y, int n){
  
-     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
     glutCreateWindow("Test points array");
     glEnable(GL_POINT_SMOOTH);
     glutDisplayFunc(display);
