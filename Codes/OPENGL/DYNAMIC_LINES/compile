@@ -1,2 +1,2 @@
-clang -I/usr/local/include -I/opt/local/include -L/opt/local/lib -lGL -lGLU -lglut -o side *.c
+clang -I/usr/local/include -I/opt/local/include -L/opt/local/lib -lGL -lGLU -lglut -o dyn_lines *.c
 

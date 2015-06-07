@@ -1,4 +1,4 @@
-CU_APPS = floating-point-accuracy floating-point-perf intrinsic-standard-comp\
+CU_APPS = my-atomic-add atomic-ordering floating-point-accuracy floating-point-perf intrinsic-standard-comp\
     nbody
 C_APPS=
 

@@ -7,7 +7,8 @@
 #define N 100
 
 static GLubyte checkImage[checkImageHeight][checkImageWidth][4];
-static GLfloat myImage[checkImageHeight][checkImageWidth][3];
+GLfloat myImage[checkImageHeight][checkImageWidth];
+static GLfloat myImage2[checkImageHeight][checkImageWidth][3];
 GLuint texture1;
 
 void makemyImage(void)
@@ -16,9 +17,10 @@ void makemyImage(void)
     
    for (i = 0; i < checkImageHeight; i++) {
       for (j = 0; j < checkImageWidth; j++) {
-         myImage[i][j][0] = 1.;
-         myImage[i][j][1] = 1.;
-         myImage[i][j][2] = 0;
+         myImage[i][j] = (float)i / checkImageHeight;
+        // myImage[i][j][1] = 0;
+         //myImage[i][j][1] = (float)j / checkImageWidth;
+         //myImage[i][j][2] = 0;
         // myImage[i][j][3] = (GLubyte) 255;
       }
    }
@@ -39,12 +41,14 @@ void makeCheckImage(void)
    }
 }
 
-void gldrawTex(){
+void display(){
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glEnable(GL_TEXTURE_2D);
    // glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
     glBindTexture(GL_TEXTURE_2D, texture1);
+   // glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+    //glTexParameteri(GL_TEXTURE_2D,GL_TEXTURE_MAG_FILTER,GL_NEAREST);
     glBegin(GL_QUADS);
    // glTexCoord2d(0,1);  glVertex3d(1,1,1);
    // glTexCoord2d(0,0);  glVertex3d(1,1,-1);
@@ -64,12 +68,6 @@ void gldrawTex(){
 
 }
 
-
-void display(){
-
-    gldrawTex();
-
-}
 void drawTex(){
  
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
@@ -89,14 +87,11 @@ void drawTex(){
    //             checkImageHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, 
     //            checkImage);
    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, checkImageWidth, 
-                checkImageHeight, 0, GL_RGB, GL_FLOAT, 
+                checkImageHeight, 0, GL_RED, GL_FLOAT, 
                 myImage);
-    //texture1 = loadTexture("(1).jpg");
  
-   //glTranslatef(0., 0.5, 0.0);
     glutDisplayFunc(display);
     glutMainLoop();
-    // glEnable(GL_LIGHTING);
     
 }
 

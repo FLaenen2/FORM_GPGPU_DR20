@@ -4,13 +4,14 @@
 #include <unistd.h>
 #include <string.h>
 
-extern int n;
-extern float *x, *y;
+int n;
+float *x, *y;
 GLint win;
 static int set = 0;
-void gldrawPoints(){
 
-    glBegin(GL_POINTS);
+void gldrawLines(){
+
+    glBegin(GL_LINE_STRIP);
     for (int i = 0; i < n; i++){
 	glVertex2f((GLfloat) x[i], (GLfloat) y[i]);
     }
@@ -19,64 +20,52 @@ void gldrawPoints(){
 }
 
 
-void
-output(int x, int y, char *string)
-{
-  int len, i;
-
-    glColor3f(0.0, 1.0, 0.0);
-  glRasterPos2f(x, y);
-  len = (int) strlen(string);
-  for (i = 0; i < len; i++) {
-    glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, string[i]);
-  }
-}
-
 void display(){
 
     glColor3f(1.0f, 0.0f, 0.0f); 
     glPointSize(6.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    gldrawPoints();
-    output(0, 24, "This is written in a GLUT bitmap font.");
+    gldrawLines();
     glutSwapBuffers();
 
 }
 
-void displace(unsigned char key, int xp, int yp){
+void keyboard(unsigned char key, int xp, int yp){
     printf("key %c pressed\n", key);
 	switch (key){
 		case 'c' : glutLeaveMainLoop();
 			break;
 		case 'e' : printf("Exiting program...\n") ; exit(1);
 	}
+
+  /* // Example to update data
     for (int i = 0; i < n; i++){
 	x[i] = (float)2.*rand()/RAND_MAX-1;
 	y[i] = (float)2.*rand()/RAND_MAX-1;
-    }
-    glutPostRedisplay();
+    
+    glutPostRedisplay();*/
 }
 
 
-void drawPoints(int argc, char **argv, int it, int block){
-
+void drawLines2D(float *u_x, float *u_y, int u_n, char *title, int block){
+	
+    n = u_n; 
+    x = u_x;
+    y = u_y;
+    int argc2 = 0;
     if (!set){
 	printf("Initializing glut\n");
-	glutInit(&argc, argv);
-	
+	glutInit(&argc2, NULL);
 	set = 1;
     }
 	glutSetOption(GLUT_ACTION_ON_WINDOW_CLOSE, GLUT_ACTION_GLUTMAINLOOP_RETURNS);
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
-    //printf("n %d\n", n);
-    char str[50];
-    sprintf(str, "Points it %d", it);
-    glEnable(GL_POINT_SMOOTH);
-    win = glutCreateWindow(str);
+	glEnable(GL_POINT_SMOOTH);
+	win = glutCreateWindow(title);
 	printf("win %d\n", win);
 	glutSetWindow(win);
 	glutDisplayFunc(display);
-    	glutKeyboardFunc(displace);
+    	glutKeyboardFunc(keyboard);
 	if (block){
     		printf("Entering bloking loop. Press 'c' key to resume, 'e' to exit pogram\n");
 		glutMainLoop();
